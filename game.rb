@@ -1,15 +1,23 @@
 require_relative 'board.rb'
 require_relative 'player.rb'
 
+require 'os'
+
 # TODO: make sure gems are properly installed prior to running application
 # TODO: determine OS since clear only works on UNIX/Linux system
 # system('cls') for windows-based systems
+# TODO: fix winning combo if multiple solutions were found
 
 class Game
   def initialize
+    @is_windows = OS.windows?
     # clearning screen
-    print %x{clear}
-
+    if @is_windows
+      system('cls')
+    else
+      print %x{clear}
+    end
+    
     # Gathering player data
     puts 'Player one, what is your name'
     player_one_name = gets.chomp
@@ -42,7 +50,11 @@ class Game
     turn = 1
     game_not_ended = true
     while game_not_ended
-      print %x{clear}
+      if @is_windows
+        system('cls')
+      else
+        print %x{clear}
+      end
       @board.example_print
       @board.print
       puts "\nTurn: " + turn.to_s
@@ -50,11 +62,19 @@ class Game
 
       if winner? || ended_in_tie?(turn)
         if ended_in_tie?(turn)
-          print %x{clear}
+          if @is_windows
+            system('cls')
+          else
+            print %x{clear}
+          end
           @board.print
           puts "\nGame ended in tie"
         else
-          print %x{clear}
+          if @is_windows
+            system('cls')
+          else
+            print %x{clear}
+          end
           @board.print_winner
           puts "\n" + @current_player.get_name + ' is the winner!'
         end
